@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { version } from "mongoose";
 import { USER_ROLES } from "../utils/constants.js";
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
     {
@@ -60,8 +61,24 @@ const userSchema = new mongoose.Schema(
     },
     {
         timestamps: true
+    },
+    {
+        versionKey: false
     }
 );
+
+userSchema.pre('save', function (next) {
+    if(!this.isModified('password')) return next();
+
+    try {
+        const salt = bcrypt.genSaltSync(10);
+        this.password = bcrypt.hashSync(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
+
+});
 
 const User = mongoose.model("User", userSchema);
 

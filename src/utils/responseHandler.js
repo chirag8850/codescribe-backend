@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from "./constants";
+import { HTTP_STATUS } from "./constants.js";
 
 const sendSuccess = (res, message = "Success", data = {}, statusCode = HTTP_STATUS.OK) => {
     return res.status(statusCode).json({

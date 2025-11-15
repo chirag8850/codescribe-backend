@@ -10,7 +10,7 @@ const sendSuccess = (res, message = "Success", data = {}, statusCode = HTTP_STAT
     });
 }
 
-const sendError = (res, message = "Something went wrong", data = {}, statusCode = HTTP_STATUS.INTERNAL_SERVER_ERROR) => {
+const sendError = (res, message = "Something went wrong", statusCode = HTTP_STATUS.INTERNAL_SERVER_ERROR, data = null) => {
     return res.status(statusCode).json({
         error: {
             status_code: statusCode,

@@ -11,6 +11,7 @@ export interface IUser {
     refreshToken?: string;
     createdAt: Date;
     updatedAt: Date;
+    otpSecret?: string;
 }
 
 export interface SignupData {

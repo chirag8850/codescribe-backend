@@ -4,7 +4,7 @@ import { HTTP_STATUS, HttpStatus } from '../utils/constants';
 import { sendSuccess, sendError } from '../utils/responseHandler';
 import AuthService from '../services/auth.service';
 import { CustomError, SignupData, LoginData } from '../types/auth.type';
-
+import OTPService from '../services/otp.service';
 
 const signupController = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -17,6 +17,36 @@ const signupController = async (req: Request, res: Response): Promise<Response> 
     } catch (error) {
         const err = error as CustomError;
         return sendError( res, err.message || 'Server error during signup', (err.statusCode as HttpStatus) || HTTP_STATUS.INTERNAL_SERVER_ERROR );
+    }
+}
+
+const generateOTPController = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        
+        const { email } = req.body as { email: string; };
+
+        const data = await OTPService.generateOTP(email);
+
+        return sendSuccess( res, 'OTP generated successfully', HTTP_STATUS.OK, data );
+
+    } catch (error) {
+        const err = error as Error;
+        return sendError( res, err.message || 'Server error during OTP generation', HTTP_STATUS.INTERNAL_SERVER_ERROR );
+    }
+}
+
+const verifyOTPController = async (req: Request, res: Response): Promise<Response> => {
+    try {
+
+        const { email , otp: user_otp } = req.body as { email: string; otp: string; };
+        
+        await OTPService.verifyOTP(email, user_otp);
+        
+        return sendSuccess( res, 'OTP verified successfully', HTTP_STATUS.OK );
+
+    } catch (error) {
+        const err = error as Error;
+        return sendError( res, err.message || 'Server error during OTP verification', HTTP_STATUS.INTERNAL_SERVER_ERROR );
     }
 }
 
@@ -60,4 +90,7 @@ const logoutController = async (req: Request, res: Response): Promise<Response> 
 }
 
 
-export { loginController, logoutController, signupController, profileController };
+export { 
+    loginController, logoutController, signupController, 
+    profileController, generateOTPController, verifyOTPController
+};

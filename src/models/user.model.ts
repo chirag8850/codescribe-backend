@@ -59,6 +59,10 @@ const userSchema = new Schema<IUser>(
             type: String,
             select: false,
         },
+        otpSecret: {
+            type: String,
+            select: false,
+        }
     },
     {
         timestamps: true,

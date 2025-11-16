@@ -6,17 +6,24 @@ import * as OTPAuth from "otpauth";
 
 class OTPService {
 
+    private buildUserQuery(identifier: string): { email: string } | { username: string } {
+        const isEmail = identifier.includes('@');
+        return isEmail 
+            ? { email: identifier.toLowerCase() } 
+            : { username: identifier.toLowerCase() };
+    }
+
     async generateOTP(params: string): Promise<any> {
 
-        const is_email = params.includes('@');
+        const query = this.buildUserQuery(params);
         
-        const is_user_exist = await AuthService.findExistingUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() } );
+        const is_user_exist = await AuthService.findExistingUser(query);
 
         if (!is_user_exist) {
             throw new CustomError('User not found', HTTP_STATUS.NOT_FOUND);
         }
 
-        const user = await AuthService.getUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() } );
+        const user = await AuthService.getUser(query);
 
         const secret = new OTPAuth.Secret().base32;
         
@@ -35,15 +42,15 @@ class OTPService {
 
     async verifyOTP(params: string, user_otp: string): Promise<void> {
 
-        const is_email = params.includes('@');
+        const query = this.buildUserQuery(params);
 
-        const is_user_exist = await AuthService.findExistingUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() } );
+        const is_user_exist = await AuthService.findExistingUser(query);
 
         if (!is_user_exist) {
             throw new CustomError('User not found', HTTP_STATUS.NOT_FOUND);
         }
         
-        const user = await AuthService.getUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() }, '+otpSecret');
+        const user = await AuthService.getUser(query, '+otpSecret');
 
         if (!user.otpSecret) {
             throw new CustomError('OTP not generated for this user', HTTP_STATUS.BAD_REQUEST);

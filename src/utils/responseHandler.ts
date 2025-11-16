@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import { HTTP_STATUS, HttpStatus } from "./constants";
-import { ApiResponse } from '../types';
+import { ApiResponse } from '../types/auth.type';
 
 export const sendSuccess = <T = any>(
     res: Response,
     message: string = "Success",
-    data: T = {} as T,
-    statusCode: HttpStatus = HTTP_STATUS.OK
+    statusCode: HttpStatus = HTTP_STATUS.OK,
+    data: T = {} as T
 ): Response<ApiResponse<T>> => {
     return res.status(statusCode).json({
         success: {

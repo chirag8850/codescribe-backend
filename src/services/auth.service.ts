@@ -1,15 +1,15 @@
 import User from '../models/user.model';
 import { HTTP_STATUS } from '../utils/constants';
-import { CustomError, IUser, SignupData } from '../types';
+import { CustomError, IUser, SignupData } from '../types/auth.type';
 
 class AuthService {
-    async findExistingUser(email: string, username: string): Promise<IUser | null> {
-        return await User.findOne({
-            $or: [
-                { email: email.toLowerCase() },
-                { username: username.toLowerCase() }
-            ]
-        });
+    async findExistingUser({ email, username }: { email?: string; username?: string }): Promise<IUser | null> {
+        const query: any [] = [];
+
+        if (email) query.push({ email: email.toLowerCase() });
+        if (username) query.push({ username: username.toLowerCase() });
+
+        return await User.findOne({ $or: query });
     }
 
     validateUserUniqueness(existing_user: IUser | null, email: string, username: string): void {
@@ -39,14 +39,16 @@ class AuthService {
         return new_user;
     }
 
-    async getUser(key: any): Promise<any> {
-        return await User.findOne(key).select('-password -refreshToken -_id');
+    async getUser(key: any, selectFields?:string): Promise<any> {
+        const select_default:string = '-__v';
+        const select_query = selectFields ? `${select_default} ${selectFields}` : select_default;
+        return await User.findOne(key).select(select_query);
     }
 
     async signup(signup_data: SignupData): Promise<any> {
         const { username, email } = signup_data;
 
-        const existing_user = await this.findExistingUser(email, username);
+        const existing_user = await this.findExistingUser({ email, username });
         
         this.validateUserUniqueness(existing_user, email, username);
 

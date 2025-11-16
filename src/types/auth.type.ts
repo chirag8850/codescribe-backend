@@ -1,3 +1,5 @@
+import { HttpStatus } from "../utils/constants";
+
 export interface IUser {
     username: string;
     name: string;
@@ -9,6 +11,7 @@ export interface IUser {
     refreshToken?: string;
     createdAt: Date;
     updatedAt: Date;
+    otpSecret?: string;
 }
 
 export interface SignupData {
@@ -26,14 +29,14 @@ export interface LoginData {
 
 export interface ApiResponse<T = any> {
     success?: {
-        status_code: number;
+        status_code: HttpStatus;
         message: string;
         data: T;
     };
     error?: {
-        status_code: number;
+        status_code: HttpStatus;
         message: string;
-        data: any;
+        data: T | null;
     };
 }
 

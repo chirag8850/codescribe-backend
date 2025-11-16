@@ -1,6 +1,7 @@
 import User from '../models/user.model';
 import { HTTP_STATUS } from '../utils/constants';
 import { CustomError, IUser, SignupData } from '../types/auth.type';
+import tokenService from './token.service';
 
 class AuthService {
     async findExistingUser({ email, username }: { email?: string; username?: string }): Promise<IUser | null> {
@@ -77,9 +78,22 @@ class AuthService {
             throw new CustomError('Invalid email or password', HTTP_STATUS.UNAUTHORIZED);
         }
 
-        user.password = undefined;
-        user._id = undefined;
-        return user;
+        const tokens = tokenService.generateTokens({
+            email: user.email,
+            username: user.username,
+            role: user.role,
+        });
+
+        user.refreshToken = tokens.refreshToken;
+        await user.save();
+
+        return {
+            email: user.email,
+            username: user.username,
+            role: user.role,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+        };
     }
 }
 

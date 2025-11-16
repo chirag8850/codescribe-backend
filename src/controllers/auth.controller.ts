@@ -3,7 +3,7 @@ import User from '../models/user.model';
 import { HTTP_STATUS, HttpStatus } from '../utils/constants';
 import { sendSuccess, sendError } from '../utils/responseHandler';
 import AuthService from '../services/auth.service';
-import { CustomError, SignupData, LoginData } from '../types';
+import { CustomError, SignupData, LoginData } from '../types/auth.type';
 
 
 const signupController = async (req: Request, res: Response): Promise<Response> => {

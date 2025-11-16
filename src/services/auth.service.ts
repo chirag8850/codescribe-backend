@@ -1,6 +1,6 @@
 import User from '../models/user.model';
 import { HTTP_STATUS } from '../utils/constants';
-import { CustomError, IUser, SignupData } from '../types';
+import { CustomError, IUser, SignupData } from '../types/auth.type';
 
 class AuthService {
     async findExistingUser(email: string, username: string): Promise<IUser | null> {

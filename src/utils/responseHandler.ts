@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HTTP_STATUS, HttpStatus } from "./constants";
-import { ApiResponse } from '../types';
+import { ApiResponse } from '../types/auth.type';
 
 export const sendSuccess = <T = any>(
     res: Response,

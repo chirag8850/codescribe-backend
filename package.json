@@ -1,24 +1,36 @@
 {
-  "name": "codescribe",
-  "version": "1.0.0",
-  "type": "module",
-  "main": "src/server.js",
-  "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "express-validator": "^7.3.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.3",
-    "nodemon": "^3.1.10"
-  }
+    "name": "codescribe",
+    "version": "1.0.0",
+    "main": "dist/server.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/server.js",
+        "dev": "nodemon",
+        "clean": "rimraf dist"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcryptjs": "^3.0.3",
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.3",
+        "express": "^5.1.0",
+        "express-validator": "^7.3.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.19.3"
+    },
+    "devDependencies": {
+        "@types/bcryptjs": "^2.4.6",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.5",
+        "@types/express-validator": "^2.20.33",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/node": "^24.10.1",
+        "nodemon": "^3.1.10",
+        "rimraf": "^6.1.0",
+        "tsx": "^4.20.6",
+        "typescript": "^5.9.3"
+    }
 }

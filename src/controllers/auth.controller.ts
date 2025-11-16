@@ -54,28 +54,6 @@ const verifyOTPController = async (req: Request, res: Response): Promise<Respons
     }
 }
 
-const profileController = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const { username } = req.query;
-        
-        if (!username || typeof username !== 'string') {
-            return sendError( res, 'Username is required', HTTP_STATUS.BAD_REQUEST );
-        }
-        
-        const user = await User.findOne({ username }).select('-password -refreshToken -_id');
-
-        if (!user) {
-            return sendError( res, 'User not found', HTTP_STATUS.NOT_FOUND );   
-        }
-
-        return sendSuccess( res, 'User profile fetched successfully', HTTP_STATUS.OK, user );  
-
-    } catch (error) {
-        const err = error as Error;
-        return sendError( res, err.message || 'Server error during fetching profile', HTTP_STATUS.INTERNAL_SERVER_ERROR );
-    }
-}
-
 const loginController = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { email, password } = req.body as LoginData;
@@ -96,5 +74,5 @@ const logoutController = async (req: Request, res: Response): Promise<Response> 
 
 export { 
     loginController, logoutController, signupController, 
-    profileController, generateOTPController, verifyOTPController
+    generateOTPController, verifyOTPController
 };

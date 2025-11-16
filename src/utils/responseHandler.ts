@@ -5,8 +5,8 @@ import { ApiResponse } from '../types';
 export const sendSuccess = <T = any>(
     res: Response,
     message: string = "Success",
-    data: T = {} as T,
-    statusCode: HttpStatus = HTTP_STATUS.OK
+    statusCode: HttpStatus = HTTP_STATUS.OK,
+    data: T = {} as T
 ): Response<ApiResponse<T>> => {
     return res.status(statusCode).json({
         success: {

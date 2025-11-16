@@ -1,3 +1,5 @@
+import { HttpStatus } from "../utils/constants";
+
 export interface IUser {
     username: string;
     name: string;
@@ -26,14 +28,14 @@ export interface LoginData {
 
 export interface ApiResponse<T = any> {
     success?: {
-        status_code: number;
+        status_code: HttpStatus;
         message: string;
         data: T;
     };
     error?: {
-        status_code: number;
+        status_code: HttpStatus;
         message: string;
-        data: any;
+        data: T | null;
     };
 }
 

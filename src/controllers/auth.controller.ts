@@ -34,7 +34,7 @@ const profileController = async (req: Request, res: Response): Promise<Response>
             return sendError( res, 'User not found', HTTP_STATUS.NOT_FOUND );   
         }
 
-        return sendSuccess( res, 'User profile fetched successfully', user , HTTP_STATUS.OK );  
+        return sendSuccess( res, 'User profile fetched successfully', HTTP_STATUS.OK, user );  
 
     } catch (error) {
         const err = error as Error;
@@ -45,12 +45,7 @@ const profileController = async (req: Request, res: Response): Promise<Response>
 const loginController = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { email, password } = req.body as LoginData;
-        return sendSuccess(
-            res,
-            'Login successful',
-            { email },
-            HTTP_STATUS.OK
-        );
+        return sendSuccess( res, 'Login successful', HTTP_STATUS.OK, { email } );   
     } catch (error) {
         return sendError( res, 'Server error during login', HTTP_STATUS.INTERNAL_SERVER_ERROR );
     }
@@ -59,7 +54,6 @@ const loginController = async (req: Request, res: Response): Promise<Response> =
 const logoutController = async (req: Request, res: Response): Promise<Response> => {
     try {        
         return sendSuccess( res, 'Logout successful', HTTP_STATUS.OK );
-
     } catch (error) {
         return sendError( res, 'Server error during logout', HTTP_STATUS.INTERNAL_SERVER_ERROR );
     }

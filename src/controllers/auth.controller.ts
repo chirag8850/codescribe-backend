@@ -57,9 +57,18 @@ const verifyOTPController = async (req: Request, res: Response): Promise<Respons
 const loginController = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { email, password } = req.body as LoginData;
-        return sendSuccess( res, 'Login successful', HTTP_STATUS.OK, { email } );   
+
+        if (!email || !password) {
+            return sendError( res, 'email and password is required', HTTP_STATUS.BAD_REQUEST );
+        }
+
+        const data = await AuthService.login(email, password );
+
+        return sendSuccess( res, 'Login successful', HTTP_STATUS.OK, data );
+
     } catch (error) {
-        return sendError( res, 'Server error during login', HTTP_STATUS.INTERNAL_SERVER_ERROR );
+        const err = error as CustomError;
+        return sendError( res, err.message || 'Server error during login', (err.statusCode as HttpStatus) || HTTP_STATUS.INTERNAL_SERVER_ERROR );
     }
 }
 

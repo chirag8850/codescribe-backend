@@ -62,6 +62,25 @@ class AuthService {
 
         return created_user;
     }
+
+    async login(email: string, password: string): Promise<any> {
+        
+        const user = await this.getUser({ email: email.toLowerCase() }, '+password');
+
+        if (!user) {
+            throw new CustomError('Invalid email or password', HTTP_STATUS.UNAUTHORIZED);
+        }
+
+        const is_password_valid = await user.comparePassword(password);
+
+        if (!is_password_valid) {
+            throw new CustomError('Invalid email or password', HTTP_STATUS.UNAUTHORIZED);
+        }
+
+        user.password = undefined;
+        user._id = undefined;
+        return user;
+    }
 }
 
 export default new AuthService();

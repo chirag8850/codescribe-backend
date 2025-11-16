@@ -1,8 +1,9 @@
-import mongoose, { version } from "mongoose";
-import { USER_ROLES } from "../utils/constants.js";
+import mongoose, { Schema } from "mongoose";
+import { USER_ROLES } from "../utils/constants";
 import bcrypt from 'bcryptjs';
+import { IUser } from '../types';
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema<IUser>(
     {
         username: {
             type: String,
@@ -73,11 +74,11 @@ userSchema.pre('save', function (next) {
         this.password = bcrypt.hashSync(this.password, salt);
         next();
     } catch (error) {
-        next(error);
+        next(error as Error);
     }
 
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 
 export default User;

@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 
-import authRoutes from './routes/auth.routes.js';
+import authRoutes from './routes/auth.routes';
 
-const app = express();
+const app: Application = express();
 
 
 // Middleware Setup

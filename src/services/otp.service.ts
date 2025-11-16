@@ -6,15 +6,17 @@ import * as OTPAuth from "otpauth";
 
 class OTPService {
 
-    async generateOTP(email: string): Promise<any> {
+    async generateOTP(params: string): Promise<any> {
+
+        const is_email = params.includes('@');
         
-        const is_user_exist = await AuthService.findExistingUser({ email });
+        const is_user_exist = await AuthService.findExistingUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() } );
 
         if (!is_user_exist) {
             throw new CustomError('User not found', HTTP_STATUS.NOT_FOUND);
         }
 
-        const user = await AuthService.getUser({ email: email.toLowerCase() });
+        const user = await AuthService.getUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() } );
 
         const secret = new OTPAuth.Secret().base32;
         
@@ -31,15 +33,17 @@ class OTPService {
         return { otp: otp.generate() };
     }
 
-    async verifyOTP(email: string, user_otp: string): Promise<void> {
+    async verifyOTP(params: string, user_otp: string): Promise<void> {
 
-        const is_user_exist = await AuthService.findExistingUser({ email });
+        const is_email = params.includes('@');
+
+        const is_user_exist = await AuthService.findExistingUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() } );
 
         if (!is_user_exist) {
             throw new CustomError('User not found', HTTP_STATUS.NOT_FOUND);
         }
         
-        const user = await AuthService.getUser({ email: email.toLowerCase() }, '+otpSecret');
+        const user = await AuthService.getUser( is_email ? { email: params.toLowerCase() } : { username: params.toLowerCase() }, '+otpSecret');
 
         if (!user.otpSecret) {
             throw new CustomError('OTP not generated for this user', HTTP_STATUS.BAD_REQUEST);

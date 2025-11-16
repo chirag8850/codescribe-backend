@@ -23,9 +23,9 @@ const signupController = async (req: Request, res: Response): Promise<Response> 
 const generateOTPController = async (req: Request, res: Response): Promise<Response> => {
     try {
         
-        const { email } = req.body as { email: string; };
+        const { identifier } = req.body as { identifier: string; };
 
-        const data = await OTPService.generateOTP(email);
+        const data = await OTPService.generateOTP(identifier);
 
         return sendSuccess( res, 'OTP generated successfully', HTTP_STATUS.OK, data );
 
@@ -38,9 +38,9 @@ const generateOTPController = async (req: Request, res: Response): Promise<Respo
 const verifyOTPController = async (req: Request, res: Response): Promise<Response> => {
     try {
 
-        const { email , otp: user_otp } = req.body as { email: string; otp: string; };
+        const { identifier, otp: user_otp } = req.body as { identifier: string; otp: string; };
         
-        await OTPService.verifyOTP(email, user_otp);
+        await OTPService.verifyOTP(identifier, user_otp);
         
         return sendSuccess( res, 'OTP verified successfully', HTTP_STATUS.OK );
 

@@ -73,7 +73,11 @@ const loginController = async (req: Request, res: Response): Promise<Response> =
 }
 
 const logoutController = async (req: Request, res: Response): Promise<Response> => {
-    try {        
+    try {
+        const { email } = req.body as { email: string; };
+
+        await AuthService.logout(email);
+                
         return sendSuccess( res, 'Logout successful', HTTP_STATUS.OK );
     } catch (error) {
         return sendError( res, 'Server error during logout', HTTP_STATUS.INTERNAL_SERVER_ERROR );

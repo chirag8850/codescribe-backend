@@ -95,6 +95,15 @@ class AuthService {
             refreshToken: tokens.refreshToken,
         };
     }
+
+    async logout(email: string): Promise<void> {
+        const user = await this.getUser({ email: email.toLowerCase() });
+
+        user.refreshToken = undefined;
+        await user.save();
+
+        return;
+    }
 }
 
 export default new AuthService();

@@ -1,4 +1,3 @@
-import User from '../models/user.model';
 import { HTTP_STATUS } from '../utils/constants';
 import { CustomError } from '../types/auth.type';
 import AuthService from './auth.service';

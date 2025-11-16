@@ -9,10 +9,14 @@ import OTPService from '../services/otp.service';
 const signupController = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { username, name, email, password, avatar } = req.body as SignupData;
+
+        if (!username || !name || !email || !password) {
+            return sendError( res, 'All required fields must be provided', HTTP_STATUS.BAD_REQUEST );
+        }
         
         const data = await AuthService.signup({ username, name, email, password, avatar });
 
-        return sendSuccess( res, 'Account created successfully', data, HTTP_STATUS.CREATED);
+        return sendSuccess( res, 'Account created successfully', HTTP_STATUS.CREATED, data);
 
     } catch (error) {
         const err = error as CustomError;

@@ -144,7 +144,7 @@ class AuthService {
     }
 
     async refreshToken(email: string, refreshToken: string): Promise<any> {
-        const user = await this.getUser({ email: email.toLowerCase() });
+        const user = await this.getUser({ email: email.toLowerCase() }, '+refreshToken');
 
         if (!user) {
             throw new CustomError('User not found', HTTP_STATUS.NOT_FOUND);

@@ -24,12 +24,13 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
         next();
 
     } catch (error) {
-        if (error instanceof jwt.JsonWebTokenError) {
-            return sendError(res, 'Invalid access token', HTTP_STATUS.UNAUTHORIZED);
-        }
 
         if (error instanceof jwt.TokenExpiredError) {
             return sendError(res, 'Access token has expired', HTTP_STATUS.FORBIDDEN);
+        }
+
+        if (error instanceof jwt.JsonWebTokenError) {
+            return sendError(res, 'Invalid access token', HTTP_STATUS.UNAUTHORIZED);
         }
 
         return sendError(res, 'Server error during token authentication', HTTP_STATUS.INTERNAL_SERVER_ERROR);

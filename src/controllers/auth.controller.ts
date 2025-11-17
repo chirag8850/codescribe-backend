@@ -7,6 +7,7 @@ import { CustomError, SignupData, LoginData } from '../types/auth.type';
 import OTPService from '../services/otp.service';
 import tokenService from '../services/token.service';
 import jwt from 'jsonwebtoken';
+import { AuthRequest } from '../middlewares/auth.middleware';
 
 const signupController = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -139,8 +140,18 @@ const refreshTokenController = async (req: Request, res: Response): Promise<Resp
     }
 }
 
+const getProfileController = async (req: AuthRequest, res: Response): Promise<Response> => {
+    try {
+        const user_email = req.user?.email;
+        return sendSuccess( res, 'Profile fetched successfully', HTTP_STATUS.OK );
+    } catch (error) {
+        const err = error as Error;
+        return sendError( res, err.message || 'Server error during fetching profile', HTTP_STATUS.INTERNAL_SERVER_ERROR );
+    }
+}
+
 
 export { 
     loginPasswordController, logoutController, signupController, 
-    generateOTPController, verifyOTPController, loginOTPController, refreshTokenController
+    generateOTPController, verifyOTPController, loginOTPController, refreshTokenController, getProfileController
 };

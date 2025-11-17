@@ -23,7 +23,7 @@ export interface SignupData {
 }
 
 export interface LoginData {
-    email: string;
+    identifier: string;
     password: string;
 }
 

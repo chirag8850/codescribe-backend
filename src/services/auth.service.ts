@@ -2,6 +2,7 @@ import User from '../models/user.model';
 import { HTTP_STATUS } from '../utils/constants';
 import { CustomError, IUser, SignupData } from '../types/auth.type';
 import tokenService from './token.service';
+import { buildUserQuery } from '../utils/constants';
 
 class AuthService {
     async findExistingUser({ email, username }: { email?: string; username?: string }): Promise<IUser | null> {
@@ -64,12 +65,14 @@ class AuthService {
         return created_user;
     }
 
-    async login(email: string, password: string): Promise<any> {
+    async loginPassword(identifier: string, password: string): Promise<any> {
+
+        const query = buildUserQuery(identifier);
         
-        const user = await this.getUser({ email: email.toLowerCase() }, '+password');
+        const user = await this.getUser(query, '+password');
 
         if (!user) {
-            throw new CustomError('Invalid email or password', HTTP_STATUS.UNAUTHORIZED);
+            throw new CustomError('Invalid username or email or password', HTTP_STATUS.UNAUTHORIZED);
         }
 
         const is_password_valid = await user.comparePassword(password);

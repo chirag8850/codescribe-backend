@@ -54,15 +54,15 @@ const verifyOTPController = async (req: Request, res: Response): Promise<Respons
     }
 }
 
-const loginController = async (req: Request, res: Response): Promise<Response> => {
+const loginPasswordController = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const { email, password } = req.body as LoginData;
+        const { identifier , password } = req.body as LoginData;
 
-        if (!email || !password) {
-            return sendError( res, 'email and password is required', HTTP_STATUS.BAD_REQUEST );
+        if (!identifier || !password) {
+            return sendError( res, 'identifier and password is required', HTTP_STATUS.BAD_REQUEST );
         }
 
-        const data = await AuthService.login(email, password );
+        const data = await AuthService.loginPassword(identifier, password );
 
         return sendSuccess( res, 'Login successful', HTTP_STATUS.OK, data );
 
@@ -86,6 +86,6 @@ const logoutController = async (req: Request, res: Response): Promise<Response> 
 
 
 export { 
-    loginController, logoutController, signupController, 
+    loginPasswordController, logoutController, signupController, 
     generateOTPController, verifyOTPController
 };

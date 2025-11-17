@@ -1,20 +1,14 @@
 import { HTTP_STATUS } from '../utils/constants';
 import { CustomError } from '../types/auth.type';
 import AuthService from './auth.service';
+import { buildUserQuery } from '../utils/constants';
 import * as OTPAuth from "otpauth";
 
 class OTPService {
 
-    private buildUserQuery(identifier: string): { email: string } | { username: string } {
-        const isEmail = identifier.includes('@');
-        return isEmail 
-            ? { email: identifier.toLowerCase() } 
-            : { username: identifier.toLowerCase() };
-    }
-
     async generateOTP(params: string): Promise<any> {
 
-        const query = this.buildUserQuery(params);
+        const query = buildUserQuery(params);
         
         const is_user_exist = await AuthService.findExistingUser(query);
 
@@ -41,7 +35,7 @@ class OTPService {
 
     async verifyOTP(params: string, user_otp: string): Promise<void> {
 
-        const query = this.buildUserQuery(params);
+        const query = buildUserQuery(params);
 
         const is_user_exist = await AuthService.findExistingUser(query);
 

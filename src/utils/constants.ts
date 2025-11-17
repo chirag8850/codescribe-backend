@@ -16,3 +16,10 @@ export const USER_ROLES = {
 
 export type HttpStatus = typeof HTTP_STATUS[keyof typeof HTTP_STATUS];
 export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES];
+
+export function buildUserQuery(identifier: string): { email: string } | { username: string } {
+    const isEmail = identifier.includes('@');
+    return isEmail 
+        ? { email: identifier.toLowerCase() } 
+        : { username: identifier.toLowerCase() };
+}

@@ -3,6 +3,7 @@ import { HTTP_STATUS } from '../utils/constants';
 import { CustomError, IUser, SignupData } from '../types/auth.type';
 import tokenService from './token.service';
 import { buildUserQuery } from '../utils/constants';
+import OTPService from './otp.service';
 
 class AuthService {
     async findExistingUser({ email, username }: { email?: string; username?: string }): Promise<IUser | null> {
@@ -80,6 +81,40 @@ class AuthService {
         if (!is_password_valid) {
             throw new CustomError('Invalid email or password', HTTP_STATUS.UNAUTHORIZED);
         }
+
+        const tokens = tokenService.generateTokens({
+            email: user.email,
+            username: user.username,
+            role: user.role,
+        });
+
+        user.refreshToken = tokens.refreshToken;
+        await user.save();
+
+        return {
+            email: user.email,
+            username: user.username,
+            role: user.role,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+        };
+    }
+
+    async loginOTP(identifier: string, user_otp: string): Promise<any> {
+
+        const query = buildUserQuery(identifier);
+
+        const user = await this.getUser(query, '+otpSecret');
+
+        if (!user) {
+            throw new CustomError('Invalid username or email or OTP', HTTP_STATUS.UNAUTHORIZED);
+        }
+
+        if (!user.otpSecret) {
+            throw new CustomError('OTP not generated for this user', HTTP_STATUS.BAD_REQUEST);
+        }
+
+        await OTPService.verifyOTP(identifier, user_otp);
 
         const tokens = tokenService.generateTokens({
             email: user.email,

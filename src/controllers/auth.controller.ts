@@ -72,6 +72,23 @@ const loginPasswordController = async (req: Request, res: Response): Promise<Res
     }
 }
 
+const loginOTPController = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const { identifier, otp } = req.body as { identifier: string; otp: string; };
+        if (!identifier || !otp) {
+            return sendError( res, 'identifier and otp is required', HTTP_STATUS.BAD_REQUEST );
+        }
+
+        const data = await AuthService.loginOTP(identifier, otp);
+
+        return sendSuccess( res, 'Login successful', HTTP_STATUS.OK, data );
+
+    } catch (error) {
+        const err = error as CustomError;
+        return sendError( res, err.message || 'Server error during login', (err.statusCode as HttpStatus) || HTTP_STATUS.INTERNAL_SERVER_ERROR );
+    }
+}
+
 const logoutController = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { email } = req.body as { email: string; };
@@ -87,5 +104,5 @@ const logoutController = async (req: Request, res: Response): Promise<Response> 
 
 export { 
     loginPasswordController, logoutController, signupController, 
-    generateOTPController, verifyOTPController
+    generateOTPController, verifyOTPController, loginOTPController
 };

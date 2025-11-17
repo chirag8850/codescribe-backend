@@ -3,6 +3,7 @@ import cors from 'cors';
 
 import authRoutes from './routes/auth.routes';
 import uploadRoutes from './routes/upload.routes';
+import profileRoutes from './routes/profile.routes';
 
 const app: Application = express();
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes Setup
 app.use('/api/auth', authRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/', profileRoutes);
 
 
 

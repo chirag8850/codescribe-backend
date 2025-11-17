@@ -43,7 +43,7 @@ class AuthService {
     }
 
     async getUser(key: any, selectFields?:string): Promise<any> {
-        const select_default:string = '-__v';
+        const select_default:string = '-__v -_id';
         const select_query = selectFields ? `${select_default} ${selectFields}` : select_default;
         return await User.findOne(key).select(select_query);
     }

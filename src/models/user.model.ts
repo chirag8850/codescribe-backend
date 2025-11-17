@@ -62,6 +62,16 @@ const userSchema = new Schema<IUser>(
         otpSecret: {
             type: String,
             select: false,
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            select: false,
+        },
+        updatedAt: {
+            type: Date,
+            default: Date.now,
+            select: false,
         }
     },
     {

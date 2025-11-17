@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import User from '../models/user.model';
 import { HTTP_STATUS, HttpStatus } from '../utils/constants';
 import { sendSuccess, sendError } from '../utils/responseHandler';
 import AuthService from '../services/auth.service';
 import { CustomError, SignupData, LoginData } from '../types/auth.type';
 import OTPService from '../services/otp.service';
-import tokenService from '../services/token.service';
 import jwt from 'jsonwebtoken';
 import { AuthRequest } from '../middlewares/auth.middleware';
 
@@ -140,18 +138,7 @@ const refreshTokenController = async (req: Request, res: Response): Promise<Resp
     }
 }
 
-const getProfileController = async (req: AuthRequest, res: Response): Promise<Response> => {
-    try {
-        const user_email = req.user?.email;
-        return sendSuccess( res, 'Profile fetched successfully', HTTP_STATUS.OK );
-    } catch (error) {
-        const err = error as Error;
-        return sendError( res, err.message || 'Server error during fetching profile', HTTP_STATUS.INTERNAL_SERVER_ERROR );
-    }
-}
-
-
 export { 
     loginPasswordController, logoutController, signupController, 
-    generateOTPController, verifyOTPController, loginOTPController, refreshTokenController, getProfileController
+    generateOTPController, verifyOTPController, loginOTPController, refreshTokenController
 };

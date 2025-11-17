@@ -40,6 +40,29 @@ class TokenService {
             refreshToken: this.generateRefreshToken(payload),
         };
     }
+
+    verifyRefreshToken(token: string): TokenPayload {
+        const secret = process.env.JWT_REFRESH_SECRET;
+        
+        if (!secret) {
+            throw new CustomError('JWT_REFRESH_SECRET is not defined', HTTP_STATUS.INTERNAL_SERVER_ERROR);
+        }
+
+        const decoded = jwt.verify(token, secret) as TokenPayload;
+        return decoded;
+    }
+
+    verifyAccessToken(token: string): TokenPayload {
+        const secret = process.env.JWT_ACCESS_SECRET;
+        
+        if (!secret) {
+            throw new CustomError('JWT_ACCESS_SECRET is not defined', HTTP_STATUS.INTERNAL_SERVER_ERROR);
+        }
+
+        const decoded = jwt.verify(token, secret) as TokenPayload;
+        return decoded;
+    }
+
 }
 
 export default new TokenService();

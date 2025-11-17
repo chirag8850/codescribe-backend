@@ -5,6 +5,8 @@ import { sendSuccess, sendError } from '../utils/responseHandler';
 import AuthService from '../services/auth.service';
 import { CustomError, SignupData, LoginData } from '../types/auth.type';
 import OTPService from '../services/otp.service';
+import tokenService from '../services/token.service';
+import jwt from 'jsonwebtoken';
 
 const signupController = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -101,8 +103,44 @@ const logoutController = async (req: Request, res: Response): Promise<Response> 
     }
 }
 
+const refreshTokenController = async (req: Request, res: Response): Promise<Response> => {
+    try {
+
+        const { email } = req.body as { email: string };
+
+        const auth_header = req.headers['authorization'];
+
+        const refreshToken = auth_header && auth_header.split(' ')[1];
+
+        if (!refreshToken) {
+            return sendError( res, 'Refresh token is required', HTTP_STATUS.BAD_REQUEST );
+        }
+
+        if (!email) {
+            return sendError( res, 'Email is required', HTTP_STATUS.BAD_REQUEST );
+        }
+
+        const data = await AuthService.refreshToken(email, refreshToken);
+
+        return sendSuccess( res, 'Token refreshed successfully', HTTP_STATUS.OK, data );
+
+    } catch (error) {
+        
+        if (error instanceof jwt.TokenExpiredError) {
+            return sendError( res, 'Refresh token has expired. Please login again', HTTP_STATUS.UNAUTHORIZED, { code: 'REFRESH_TOKEN_EXPIRED' } );
+        }
+        
+        if (error instanceof jwt.JsonWebTokenError) {
+            return sendError( res, 'Invalid refresh token', HTTP_STATUS.UNAUTHORIZED );
+        }
+        
+        const err = error as CustomError;
+        return sendError( res, err.message || 'Server error during token refresh', (err.statusCode as HttpStatus) || HTTP_STATUS.INTERNAL_SERVER_ERROR );
+    }
+}
+
 
 export { 
     loginPasswordController, logoutController, signupController, 
-    generateOTPController, verifyOTPController, loginOTPController
+    generateOTPController, verifyOTPController, loginOTPController, refreshTokenController
 };

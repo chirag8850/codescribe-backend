@@ -142,6 +142,34 @@ class AuthService {
 
         return;
     }
+
+    async refreshToken(email: string, refreshToken: string): Promise<any> {
+        const user = await this.getUser({ email: email.toLowerCase() });
+
+        if (!user) {
+            throw new CustomError('User not found', HTTP_STATUS.NOT_FOUND);
+        }
+
+        if (user.refreshToken !== refreshToken) {
+            throw new CustomError('Invalid refresh token', HTTP_STATUS.UNAUTHORIZED);
+        }
+
+        const decoded = tokenService.verifyRefreshToken(refreshToken);
+
+        if (decoded.email !== email) {
+            throw new CustomError('Token email mismatch', HTTP_STATUS.UNAUTHORIZED);
+        }
+
+        const new_access_token = tokenService.generateAccessToken({
+            email: user.email,
+            username: user.username,
+            role: user.role,
+        });
+
+        return {
+            accessToken: new_access_token,
+        };
+    }
 }
 
 export default new AuthService();

@@ -1,7 +1,9 @@
-import cloudinary from "../utils/cloudinary.config";
+import { initCloudinary } from "../utils/cloudinary.config";
+
 
 class UploadService {
     async uploadImage(fileBuffer: Buffer, fileName: string): Promise<string> {
+        const cloudinary = initCloudinary();
         try {
             const url = await new Promise<string>((resolve, reject) => {
                 const stream = cloudinary.uploader.upload_stream(

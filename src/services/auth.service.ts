@@ -4,6 +4,7 @@ import { CustomError, IUser, SignupData } from '../types/auth.type';
 import tokenService from './token.service';
 import { buildUserQuery } from '../utils/constants';
 import OTPService from './otp.service';
+import EmailService from './email.service';
 
 class AuthService {
     async findExistingUser({ email, username }: { email?: string; username?: string }): Promise<IUser | null> {
@@ -90,6 +91,8 @@ class AuthService {
 
         user.refreshToken = tokens.refreshToken;
         await user.save();
+
+        await EmailService.sendEmail();
 
         return {
             email: user.email,

@@ -1,4 +1,4 @@
-import { initCloudinary } from "../utils/cloudinary.config";
+import { initCloudinary } from "../config/cloudinary.config";
 
 
 class UploadService {

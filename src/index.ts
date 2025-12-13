@@ -4,7 +4,7 @@ import cors from 'cors';
 import http from 'http';
 import dotenv from 'dotenv';
 
-import { connectDB } from './config/database';
+import { connectDB } from './config/database.config';
 import authRoutes from './routes/auth.routes';
 import uploadRoutes from './routes/upload.routes';
 import profileRoutes from './routes/profile.routes';
